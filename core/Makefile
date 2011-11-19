@@ -2062,8 +2062,15 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-.PHONY: otapackage
+REFLEX_TARGET_PACKAGE := $(PRODUCT_OUT)/ReFlex-$(TARGET_PRODUCT)-$(PLATFORM_VERSION)-$(shell date +%Y%m%d).zip
+
+.PHONY: otapackage bacon paneer
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
+bacon: otapackage
+	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(REFLEX_TARGET_PACKAGE)
+	$(hide) $(MD5SUM) $(REFLEX_TARGET_PACKAGE) > $(REFLEX_TARGET_PACKAGE).md5sum
+	@echo "Package Complete: $(REFLEX_TARGET_PACKAGE)"
+paneer: bacon
 
 endif    # build_ota_package
 
